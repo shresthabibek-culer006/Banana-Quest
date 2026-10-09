@@ -1,0 +1,24 @@
+{
+  "name": "banana-quest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shresthabibek-culer006/Banana-Quest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shresthabibek-culer006/Banana-Quest/issues"
+  },
+  "homepage": "https://github.com/shresthabibek-culer006/Banana-Quest#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
