@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Banana Quest</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Banana Quest</h1>
+<div id="game">
+  <img id="puzzleImg" alt="Banana puzzle" style="display:none; max-width:100%;">
+  <div id="controls" style="display:none;">
+    <input type="number" id="answerInput" placeholder="Your answer">
+    <button id="submitBtn">Submit</button>
+  </div>
+  <p id="message"></p>
+  <p>Score: <span id="score">0</span></p>
+</div>
+  <button id="startBtn">Start Game</button>
+
+  <script src="js/api.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
