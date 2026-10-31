@@ -1,0 +1,157 @@
+<!-- Generated with Antigravity (AI), reviewed and understood by me. Part of CIS046-3 Assignment 1. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play Banana Quest</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Dynamic Navigation Bar Mount Point -->
+  <div id="navbarRoot"></div>
+
+  <main class="main-content">
+    <div class="container game-container">
+      
+      <!-- SCREEN 1: DIFFICULTY SELECTION & SETUP -->
+      <section id="setupScreen" class="card" style="text-align: center; max-width: 620px; margin: 1rem auto;">
+        <div class="brand-icon" style="font-size: 3.2rem; margin-bottom: 0.5rem;">🍌</div>
+        <h2>Select Difficulty</h2>
+        <p class="auth-subtitle">Choose your challenge level. Higher difficulty grants more points per correct answer!</p>
+
+        <div class="difficulty-grid">
+          <div class="diff-card" data-diff="easy">
+            <div class="diff-title">Easy</div>
+            <div class="diff-specs">⏱ 45s / puzzle<br>⭐ 10 pts + streak</div>
+          </div>
+          <div class="diff-card selected" data-diff="medium">
+            <div class="diff-title">Medium</div>
+            <div class="diff-specs">⏱ 30s / puzzle<br>⭐ 20 pts + streak</div>
+          </div>
+          <div class="diff-card" data-diff="hard">
+            <div class="diff-title">Hard</div>
+            <div class="diff-specs">⏱ 15s / puzzle<br>⭐ 30 pts + streak</div>
+          </div>
+        </div>
+
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Rules: You have <strong>3 lives</strong>. Wrong answers or timer expiry cost 1 life. Streak grants +5 bonus points per consecutive solve!
+        </p>
+
+        <!-- EVENT: Click triggers start of round in js/game.js -->
+        <button id="startGameBtn" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.85rem 2.2rem;">
+          Start Quest 🍌
+        </button>
+      </section>
+
+      <!-- SCREEN 2: ACTIVE GAMEPLAY BOARD -->
+      <section id="gameScreen" class="card" style="display: none;">
+        <!-- HUD: Scores, Streak, Timer, Lives -->
+        <div class="stats-bar">
+          <div class="stat-item">
+            <span class="stat-label">Score</span>
+            <span id="scoreVal" class="stat-val highlight">0</span>
+          </div>
+
+          <div class="stat-item">
+            <span class="stat-label">Streak</span>
+            <span id="streakVal" class="stat-val streak">0x</span>
+          </div>
+
+          <div class="stat-item">
+            <span class="stat-label">Time Remaining</span>
+            <span id="timerVal" class="stat-val">30s</span>
+          </div>
+
+          <div class="stat-item">
+            <span class="stat-label">Lives</span>
+            <div id="livesContainer" class="lives-container">
+              <span class="life-item" id="life1">🍌</span>
+              <span class="life-item" id="life2">🍌</span>
+              <span class="life-item" id="life3">🍌</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timer Countdown Progress Bar -->
+        <div class="timer-wrapper">
+          <div id="timerBar" class="timer-bar"></div>
+        </div>
+
+        <!-- Puzzle Display Stage -->
+        <div class="puzzle-stage">
+          <div id="puzzleSpinner" class="puzzle-spinner">
+            <span class="spinner-icon">🍌</span>
+            <span>Fetching puzzle from Banana API...</span>
+          </div>
+          <img id="puzzleImg" class="puzzle-img" alt="Banana Math Puzzle" style="display:none;" />
+        </div>
+
+        <!-- Status & Feedback Messages -->
+        <div id="statusMsg" class="game-status-msg info">Solve the equation and enter the missing number!</div>
+
+        <!-- Answer Submission Form -->
+        <!-- EVENT: Enter key and submit button submit answer to server -->
+        <form id="answerForm" class="answer-form">
+          <input 
+            type="number" 
+            id="answerInput" 
+            class="form-input answer-input" 
+            placeholder="?" 
+            autocomplete="off" 
+            required 
+          />
+          <button type="submit" id="submitAnswerBtn" class="btn btn-primary">
+            Submit
+          </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1rem;">
+          <button id="endGameBtn" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.4rem 1rem;">
+            End Game
+          </button>
+        </div>
+      </section>
+
+      <!-- SCREEN 3: GAME OVER / RESULTS -->
+      <section id="gameOverScreen" class="game-over-box" style="display: none;">
+        <div style="font-size: 3.5rem; margin-bottom: 0.4rem;">🏁</div>
+        <h2 class="game-over-title">Game Over</h2>
+        <p id="gameOverReason" style="color: var(--text-muted);">You fought bravely!</p>
+
+        <div class="game-over-stats">
+          <div class="stat-item">
+            <span class="stat-label">Final Score</span>
+            <span id="finalScoreVal" class="stat-val highlight">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Solved</span>
+            <span id="finalSolvedVal" class="stat-val">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Difficulty</span>
+            <span id="finalDiffVal" class="stat-val" style="text-transform: capitalize;">Medium</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <button id="playAgainBtn" class="btn btn-primary">Play Again 🍌</button>
+          <a href="/leaderboard.html" class="btn btn-secondary">Leaderboard 🏆</a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>University of Bedfordshire &bull; CIS046-3 Software For Enterprise &bull; Assignment 1</p>
+    </div>
+  </footer>
+
+  <script src="js/nav.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
