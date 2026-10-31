@@ -248,6 +248,72 @@ app.post("/api/answer", requireLogin, (req, res) => {
   }
 });
 
+// ==========================================
+// SCORE PERSISTENCE & LEADERBOARD ENDPOINTS
+// ==========================================
+
+// AUTH & DATA: Persist completed game score linked to authenticated user
+app.post("/api/scores", requireLogin, (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const { score, difficulty, correct_answers } = req.body;
+
+    const parsedScore = Math.max(0, parseInt(score, 10) || 0);
+    const parsedCorrect = Math.max(0, parseInt(correct_answers, 10) || 0);
+    const validDifficulty = ["easy", "medium", "hard"].includes(difficulty) ? difficulty : "medium";
+
+    // AUTH: Parameterised SQL query prevents SQL injection attacks
+    const stmt = db.prepare(`
+      INSERT INTO scores (user_id, score, difficulty, correct_answers)
+      VALUES (?, ?, ?, ?)
+    `);
+    const result = stmt.run(userId, parsedScore, validDifficulty, parsedCorrect);
+
+    return res.status(201).json({
+      message: "Score saved successfully.",
+      scoreId: Number(result.lastInsertRowid)
+    });
+  } catch (error) {
+    console.error("Score save error:", error);
+    return res.status(500).json({ error: "Could not save game score." });
+  }
+});
+
+// AUTH & DATA: Retrieve top 10 players ranked by their best score
+app.get("/api/leaderboard", requireLogin, (req, res) => {
+  try {
+    // Top 10 distinct players by their single highest score
+    const stmt = db.prepare(`
+      SELECT 
+        u.username,
+        MAX(s.score) AS high_score,
+        s.difficulty,
+        s.correct_answers,
+        s.created_at
+      FROM scores s
+      JOIN users u ON s.user_id = u.id
+      GROUP BY u.id
+      ORDER BY high_score DESC, s.created_at ASC
+      LIMIT 10
+    `);
+    const leaderboard = stmt.all();
+
+    return res.json({
+      leaderboard: leaderboard.map((row, index) => ({
+        rank: index + 1,
+        username: row.username,
+        score: row.high_score,
+        difficulty: row.difficulty,
+        correct_answers: row.correct_answers,
+        date: row.created_at
+      }))
+    });
+  } catch (error) {
+    console.error("Leaderboard error:", error);
+    return res.status(500).json({ error: "Could not load leaderboard data." });
+  }
+});
+
 // Start Express server
 const server = app.listen(PORT, () => {
   console.log(`Banana Quest running at http://localhost:${PORT}`);
