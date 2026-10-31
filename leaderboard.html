@@ -1,0 +1,72 @@
+<!-- Generated with Antigravity (AI), reviewed and understood by me. Part of CIS046-3 Assignment 1. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard — Banana Quest</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Dynamic Navigation Bar Mount Point -->
+  <div id="navbarRoot"></div>
+
+  <main class="main-content">
+    <div class="container" style="max-width: 860px;">
+      <div class="card">
+        <div style="text-align: center; margin-bottom: 1.8rem;">
+          <div class="brand-icon" style="font-size: 3.2rem; margin-bottom: 0.4rem;">🏆</div>
+          <h2>Global Leaderboard</h2>
+          <p class="auth-subtitle" style="margin-bottom: 0;">Top 10 players ranked by their single highest score.</p>
+        </div>
+
+        <!-- Dynamic Loading State -->
+        <div id="leaderboardLoading" class="puzzle-spinner" style="padding: 3rem 0;">
+          <span class="spinner-icon">🍌</span>
+          <span>Loading leaderboard scores...</span>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <div id="tableContainer" class="table-wrapper" style="display: none;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 70px;">Rank</th>
+                <th>Player</th>
+                <th>High Score</th>
+                <th>Difficulty</th>
+                <th>Solved</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardBody">
+              <!-- Dynamically populated by js/leaderboard.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Empty State (Shown when no scores exist) -->
+        <div id="leaderboardEmpty" class="empty-state" style="display: none;">
+          <div class="empty-state-icon">🍌</div>
+          <h3>No High Scores Yet</h3>
+          <p>Be the first player to complete a run and establish the enterprise benchmark!</p>
+          <a href="/game.html" class="btn btn-primary">Play Now</a>
+        </div>
+
+        <div style="text-align: center; margin-top: 1.5rem;">
+          <a href="/game.html" class="btn btn-primary">Start New Run 🍌</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>University of Bedfordshire &bull; CIS046-3 Software For Enterprise &bull; Assignment 1</p>
+    </div>
+  </footer>
+
+  <script src="js/nav.js"></script>
+  <script src="js/leaderboard.js"></script>
+</body>
+</html>
