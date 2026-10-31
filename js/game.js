@@ -340,8 +340,44 @@ async function endGame(reason = "Game Over") {
   gameOverScreen.style.display = "block";
   gameOverScreen.classList.add("pop-anim");
 
-  // Hook for Task 5: Score persistence via POST /api/scores
-  if (typeof saveScoreToServer === "function") {
-    saveScoreToServer(gameState.score, gameState.difficulty, gameState.correctAnswers);
+  // Persist score to server via POST /api/scores
+  saveScoreToServer(gameState.score, gameState.difficulty, gameState.correctAnswers);
+}
+
+/**
+ * AUTH & EVENT: Automatically saves the final score to SQLite database
+ */
+async function saveScoreToServer(score, difficulty, correctAnswers) {
+  try {
+    let saveNotice = document.getElementById("scoreSaveNotice");
+    if (!saveNotice) {
+      saveNotice = document.createElement("p");
+      saveNotice.id = "scoreSaveNotice";
+      saveNotice.style.fontSize = "0.92rem";
+      saveNotice.style.margin = "0.8rem 0";
+      gameOverReason.after(saveNotice);
+    }
+    saveNotice.style.color = "var(--banana-yellow)";
+    saveNotice.textContent = "Saving score to leaderboard...";
+
+    const response = await fetch("/api/scores", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        score: score,
+        difficulty: difficulty,
+        correct_answers: correctAnswers
+      })
+    });
+
+    if (response.ok) {
+      saveNotice.style.color = "var(--success-green)";
+      saveNotice.textContent = "Score saved to leaderboard! 🏆";
+    } else {
+      saveNotice.style.color = "var(--error-red)";
+      saveNotice.textContent = "Could not record score to leaderboard.";
+    }
+  } catch (err) {
+    console.error("Failed to save score:", err);
   }
 }
