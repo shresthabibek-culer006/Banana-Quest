@@ -817,3 +817,85 @@ a:hover {
   max-width: 400px;
   margin: 0 auto 1.5rem;
 }
+
+
+/* ==========================================
+   PROFILE PAGE & STATS METRICS
+   ========================================== */
+
+.profile-header-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem 2.2rem;
+  margin-bottom: 2rem;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, rgba(255, 217, 61, 0.2), rgba(255, 132, 0, 0.2));
+  border: 2px solid var(--banana-yellow);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  flex-shrink: 0;
+}
+
+.profile-info h2 {
+  margin-bottom: 0.25rem;
+  font-size: 1.8rem;
+}
+
+.profile-joined {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.stats-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2.5rem;
+}
+
+.stat-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1.2rem;
+  text-align: center;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--banana-yellow);
+}
+
+.stat-card-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.4rem;
+}
+
+.stat-card-num {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--banana-yellow);
+  line-height: 1.1;
+  margin-bottom: 0.2rem;
+}
+
+.stat-card-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
