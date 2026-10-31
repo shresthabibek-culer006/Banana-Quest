@@ -8,13 +8,40 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Ambient Animated Glow Blobs (Pure CSS) -->
+  <div class="bg-decorations">
+    <div class="bg-blob bg-blob-1"></div>
+    <div class="bg-blob bg-blob-2"></div>
+    <div class="bg-blob bg-blob-3"></div>
+  </div>
+
   <!-- Dynamic Navigation Bar Mount Point -->
   <div id="navbarRoot"></div>
 
   <main class="main-content">
     <div class="container">
       <div class="card auth-card">
-        <div class="brand-icon" style="font-size: 3.5rem; margin-bottom: 0.5rem;">🍌</div>
+        <!-- Custom Vector SVG Mascot -->
+        <svg class="banana-hero-svg" style="width: 80px; height: 80px; margin-bottom: 0.5rem;" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="80" r="70" fill="url(#authGlow)" opacity="0.6"/>
+          <path d="M42 118C52 128 85 132 115 106C132 91 138 68 135 48C134 42 128 40 124 44C118 50 102 62 82 72C60 82 46 98 42 118Z" fill="url(#authBananaMain)" stroke="#D48800" stroke-width="3"/>
+          <path d="M48 114C56 122 84 124 108 102C122 90 127 72 126 56C112 68 96 78 76 86C58 94 50 104 48 114Z" fill="#FFF9C4" opacity="0.5"/>
+          <path d="M135 48L144 38C145 37 144 34 142 34C138 34 133 36 129 40L124 44" fill="#689F38"/>
+          <rect x="85" y="55" width="22" height="15" rx="5" fill="#14141A" stroke="#FFE082" stroke-width="2" transform="rotate(-18 85 55)"/>
+          <rect x="106" y="48" width="22" height="15" rx="5" fill="#14141A" stroke="#FFE082" stroke-width="2" transform="rotate(-18 106 48)"/>
+          <line x1="102" y1="52" x2="108" y2="50" stroke="#FFE082" stroke-width="2.5"/>
+          <defs>
+            <radialGradient id="authGlow" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stop-color="#FFD54F" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#FF9800" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="authBananaMain" x1="42" y1="120" x2="135" y2="45" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FF9800"/>
+              <stop offset="50%" stop-color="#FFEB3B"/>
+              <stop offset="100%" stop-color="#FFF59D"/>
+            </linearGradient>
+          </defs>
+        </svg>
         <h2>Welcome Back</h2>
         <p class="auth-subtitle">Sign in to your Banana Quest account to continue your run.</p>
 

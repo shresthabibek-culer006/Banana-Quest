@@ -4,45 +4,128 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Play Banana Quest</title>
+  <title>Play Banana Quest — Mission Lobby</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Ambient Animated Glow Blobs (Pure CSS) -->
+  <div class="bg-decorations">
+    <div class="bg-blob bg-blob-1"></div>
+    <div class="bg-blob bg-blob-2"></div>
+    <div class="bg-blob bg-blob-3"></div>
+  </div>
+
   <!-- Dynamic Navigation Bar Mount Point -->
   <div id="navbarRoot"></div>
 
   <main class="main-content">
     <div class="container game-container">
       
-      <!-- SCREEN 1: DIFFICULTY SELECTION & SETUP -->
-      <section id="setupScreen" class="card" style="text-align: center; max-width: 620px; margin: 1rem auto;">
-        <div class="brand-icon" style="font-size: 3.2rem; margin-bottom: 0.5rem;">🍌</div>
-        <h2>Select Difficulty</h2>
-        <p class="auth-subtitle">Choose your challenge level. Higher difficulty grants more points per correct answer!</p>
+      <!-- SCREEN 1: EYE-CATCHY DIFFICULTY SELECTION & LOBBY -->
+      <section id="setupScreen" class="card" style="text-align: center; margin: 0 auto;">
+        
+        <!-- Custom Vector SVG Banana Mascot -->
+        <svg class="banana-hero-svg" style="width: 110px; height: 110px; margin-bottom: 0.5rem;" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="80" r="70" fill="url(#lobbyGlow)" opacity="0.6"/>
+          <!-- Sparkles -->
+          <path d="M40 30L44 38L52 42L44 46L40 54L36 46L28 42L36 38Z" fill="#FFF176" opacity="0.9"/>
+          <path d="M125 45L128 50L134 53L128 56L125 61L122 56L116 53L122 50Z" fill="#FFD54F" opacity="0.8"/>
+          <!-- Banana Body -->
+          <path d="M42 118C52 128 85 132 115 106C132 91 138 68 135 48C134 42 128 40 124 44C118 50 102 62 82 72C60 82 46 98 42 118Z" fill="url(#lobbyBananaMain)" stroke="#D48800" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M48 114C56 122 84 124 108 102C122 90 127 72 126 56C112 68 96 78 76 86C58 94 50 104 48 114Z" fill="url(#lobbyBananaShine)"/>
+          <path d="M135 48L144 38C145 37 144 34 142 34C138 34 133 36 129 40L124 44" fill="#689F38" stroke="#33691E" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Sunglasses -->
+          <rect x="85" y="55" width="22" height="15" rx="5" fill="#14141A" stroke="#FFE082" stroke-width="2" transform="rotate(-18 85 55)"/>
+          <rect x="106" y="48" width="22" height="15" rx="5" fill="#14141A" stroke="#FFE082" stroke-width="2" transform="rotate(-18 106 48)"/>
+          <line x1="102" y1="52" x2="108" y2="50" stroke="#FFE082" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="88" y1="54" x2="94" y2="64" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="109" y1="47" x2="115" y2="57" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round"/>
+          <defs>
+            <radialGradient id="lobbyGlow" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stop-color="#FFD54F" stop-opacity="0.65"/>
+              <stop offset="100%" stop-color="#FF9800" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="lobbyBananaMain" x1="42" y1="120" x2="135" y2="45" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FF9800"/>
+              <stop offset="35%" stop-color="#FFC107"/>
+              <stop offset="70%" stop-color="#FFEB3B"/>
+              <stop offset="100%" stop-color="#FFF59D"/>
+            </linearGradient>
+            <linearGradient id="lobbyBananaShine" x1="50" y1="110" x2="125" y2="60" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FFF9C4" stop-opacity="0.75"/>
+              <stop offset="100%" stop-color="#FFD54F" stop-opacity="0.1"/>
+            </linearGradient>
+          </defs>
+        </svg>
 
+        <h2 style="font-size: 2.3rem; margin-bottom: 0.4rem;">Select Mission Tier</h2>
+        <p class="auth-subtitle" style="margin-bottom: 1.5rem; max-width: 580px; margin-left: auto; margin-right: auto;">
+          Choose your challenge level. Higher difficulty grants more points per correct answer!
+        </p>
+
+        <!-- 3 DISTINCT VIBRANT DIFFICULTY CARDS -->
         <div class="difficulty-grid">
+          <!-- Easy Tier (Emerald) -->
           <div class="diff-card" data-diff="easy">
+            <span class="diff-badge-icon">🌴</span>
             <div class="diff-title">Easy</div>
-            <div class="diff-specs">⏱ 45s / puzzle<br>⭐ 10 pts + streak</div>
+            <div class="diff-role">Apprentice Monkey</div>
+            <div class="diff-specs">
+              ⏱ <strong>45s</strong> / puzzle<br>
+              ⭐ <strong>10 pts</strong> + streak<br>
+              <span style="color: #00E676; font-weight: 600;">Relaxed Pace</span>
+            </div>
           </div>
+
+          <!-- Medium Tier (Banana Gold - Popular) -->
           <div class="diff-card selected" data-diff="medium">
+            <div class="popular-ribbon">POPULAR</div>
+            <span class="diff-badge-icon">⚡</span>
             <div class="diff-title">Medium</div>
-            <div class="diff-specs">⏱ 30s / puzzle<br>⭐ 20 pts + streak</div>
+            <div class="diff-role">Banana Ranger</div>
+            <div class="diff-specs">
+              ⏱ <strong>30s</strong> / puzzle<br>
+              ⭐ <strong>20 pts</strong> + streak<br>
+              <span style="color: #FFD600; font-weight: 600;">Standard Speed</span>
+            </div>
           </div>
+
+          <!-- Hard Tier (Fiery Crimson) -->
           <div class="diff-card" data-diff="hard">
-            <div class="diff-title">Hard</div>
-            <div class="diff-specs">⏱ 15s / puzzle<br>⭐ 30 pts + streak</div>
+            <span class="diff-badge-icon">🔥</span>
+            <div class="diff-title">Hardcore</div>
+            <div class="diff-role">Silverback Master</div>
+            <div class="diff-specs">
+              ⏱ <strong>15s</strong> / puzzle<br>
+              ⭐ <strong>30 pts</strong> + streak<br>
+              <span style="color: #FF1744; font-weight: 600;">Extreme Rush</span>
+            </div>
           </div>
         </div>
 
-        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem;">
-          Rules: You have <strong>3 lives</strong>. Wrong answers or timer expiry cost 1 life. Streak grants +5 bonus points per consecutive solve!
-        </p>
+        <!-- Rules & Safeguards Overview Bar -->
+        <div class="rules-bar">
+          <div class="rule-pill">
+            <span style="font-size: 1.2rem;">🍌</span>
+            <span><strong>3 Lives:</strong> Mistakes or timeouts forfeit 1 life</span>
+          </div>
+          <div class="rule-pill">
+            <span style="font-size: 1.2rem;">⚡</span>
+            <span><strong>Streak Bonus:</strong> +5 bonus pts per consecutive solve</span>
+          </div>
+          <div class="rule-pill">
+            <span style="font-size: 1.2rem;">🛡️</span>
+            <span><strong>Anti-Cheat:</strong> Server-verified session timer</span>
+          </div>
+        </div>
 
+        <!-- Start Game Button -->
         <!-- EVENT: Click triggers start of round in js/game.js -->
-        <button id="startGameBtn" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.85rem 2.2rem;">
-          Start Quest 🍌
-        </button>
+        <div style="margin-top: 1.8rem;">
+          <button id="startGameBtn" class="btn btn-arcade">
+            START QUEST 🍌
+          </button>
+        </div>
       </section>
 
       <!-- SCREEN 2: ACTIVE GAMEPLAY BOARD -->
@@ -55,7 +138,7 @@
           </div>
 
           <div class="stat-item">
-            <span class="stat-label">Streak</span>
+            <span class="stat-label">Streak Multiplier</span>
             <span id="streakVal" class="stat-val streak">0x</span>
           </div>
 
@@ -65,7 +148,7 @@
           </div>
 
           <div class="stat-item">
-            <span class="stat-label">Lives</span>
+            <span class="stat-label">Lives Remaining</span>
             <div id="livesContainer" class="lives-container">
               <span class="life-item" id="life1">🍌</span>
               <span class="life-item" id="life2">🍌</span>
@@ -102,23 +185,23 @@
             autocomplete="off" 
             required 
           />
-          <button type="submit" id="submitAnswerBtn" class="btn btn-primary">
+          <button type="submit" id="submitAnswerBtn" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.85rem 1.8rem;">
             Submit
           </button>
         </form>
 
         <div style="text-align: center; margin-top: 1rem;">
-          <button id="endGameBtn" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.4rem 1rem;">
-            End Game
+          <button id="endGameBtn" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.45rem 1.2rem;">
+            End Game Early
           </button>
         </div>
       </section>
 
       <!-- SCREEN 3: GAME OVER / RESULTS -->
       <section id="gameOverScreen" class="game-over-box" style="display: none;">
-        <div style="font-size: 3.5rem; margin-bottom: 0.4rem;">🏁</div>
-        <h2 class="game-over-title">Game Over</h2>
-        <p id="gameOverReason" style="color: var(--text-muted);">You fought bravely!</p>
+        <div style="font-size: 3.8rem; margin-bottom: 0.4rem;">🏁</div>
+        <h2 class="game-over-title">Mission Concluded</h2>
+        <p id="gameOverReason" style="color: var(--text-muted); font-size: 1.05rem;">You fought bravely!</p>
 
         <div class="game-over-stats">
           <div class="stat-item">
@@ -135,9 +218,9 @@
           </div>
         </div>
 
-        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-          <button id="playAgainBtn" class="btn btn-primary">Play Again 🍌</button>
-          <a href="/leaderboard.html" class="btn btn-secondary">Leaderboard 🏆</a>
+        <div style="display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap;">
+          <button id="playAgainBtn" class="btn btn-primary" style="font-size: 1.05rem;">Play Again 🍌</button>
+          <a href="/leaderboard.html" class="btn btn-secondary" style="font-size: 1.05rem;">Leaderboard 🏆</a>
         </div>
       </section>
 
@@ -146,7 +229,7 @@
 
   <footer class="footer">
     <div class="container">
-      <p>University of Bedfordshire &bull; CIS046-3 Software For Enterprise &bull; Assignment 1</p>
+      <p>University of Bedfordshire &bull; CIS046-3 Software For Enterprise &bull; Assignment 1 &bull; Tag v1.0.0</p>
     </div>
   </footer>
 

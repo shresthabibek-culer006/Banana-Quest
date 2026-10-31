@@ -4,53 +4,118 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Banana Quest — Puzzle Challenge</title>
+  <title>Banana Quest — Enterprise Math Puzzle Challenge</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Ambient Animated Glow Blobs (Pure CSS) -->
+  <div class="bg-decorations">
+    <div class="bg-blob bg-blob-1"></div>
+    <div class="bg-blob bg-blob-2"></div>
+    <div class="bg-blob bg-blob-3"></div>
+  </div>
+
   <!-- Dynamic Navigation Bar Mount Point -->
   <div id="navbarRoot"></div>
 
   <main class="main-content">
     <div class="container">
+      
+      <!-- HERO SECTION -->
       <section class="hero">
-        <div class="hero-banana">🍌</div>
+        <!-- Edition Pill Badge -->
+        <div class="pill-badge">
+          <span class="pill-pulse"></span>
+          <span>CIS046-3 Software For Enterprise</span>
+        </div>
+
+        <!-- Custom Vector SVG Banana Quest Mascot -->
+        <svg class="banana-hero-svg" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="80" r="70" fill="url(#heroGlow)" opacity="0.6"/>
+          <!-- Sparkles -->
+          <path d="M40 30L44 38L52 42L44 46L40 54L36 46L28 42L36 38Z" fill="#FFF176" opacity="0.9"/>
+          <path d="M125 45L128 50L134 53L128 56L125 61L122 56L116 53L122 50Z" fill="#FFD54F" opacity="0.8"/>
+          <path d="M110 120L112 124L116 126L112 128L110 132L108 128L104 126L108 124Z" fill="#FFE082" opacity="0.8"/>
+          <!-- Banana Body -->
+          <path d="M42 118C52 128 85 132 115 106C132 91 138 68 135 48C134 42 128 40 124 44C118 50 102 62 82 72C60 82 46 98 42 118Z" fill="url(#heroBananaMain)" stroke="#D48800" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M48 114C56 122 84 124 108 102C122 90 127 72 126 56C112 68 96 78 76 86C58 94 50 104 48 114Z" fill="url(#heroBananaShine)"/>
+          <path d="M135 48L144 38C145 37 144 34 142 34C138 34 133 36 129 40L124 44" fill="#689F38" stroke="#33691E" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Sunglasses -->
+          <rect x="85" y="55" width="22" height="15" rx="5" fill="#14141A" stroke="#FFE082" stroke-width="2" transform="rotate(-18 85 55)"/>
+          <rect x="106" y="48" width="22" height="15" rx="5" fill="#14141A" stroke="#FFE082" stroke-width="2" transform="rotate(-18 106 48)"/>
+          <line x1="102" y1="52" x2="108" y2="50" stroke="#FFE082" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="88" y1="54" x2="94" y2="64" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="109" y1="47" x2="115" y2="57" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round"/>
+          <defs>
+            <radialGradient id="heroGlow" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stop-color="#FFD54F" stop-opacity="0.65"/>
+              <stop offset="60%" stop-color="#FF9800" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#FF9800" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="heroBananaMain" x1="42" y1="120" x2="135" y2="45" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FF9800"/>
+              <stop offset="35%" stop-color="#FFC107"/>
+              <stop offset="70%" stop-color="#FFEB3B"/>
+              <stop offset="100%" stop-color="#FFF59D"/>
+            </linearGradient>
+            <linearGradient id="heroBananaShine" x1="50" y1="110" x2="125" y2="60" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FFF9C4" stop-opacity="0.75"/>
+              <stop offset="50%" stop-color="#FFEE58" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#FFD54F" stop-opacity="0.1"/>
+            </linearGradient>
+          </defs>
+        </svg>
+
         <h1 class="hero-title">Banana Quest</h1>
         <p class="hero-subtitle">
-          Solve dynamic math puzzles powered by the Banana API, race against the clock, protect your lives, and climb the enterprise leaderboard.
+          Solve dynamic mathematical puzzles powered by the Banana API, race against an active server-verified countdown clock, protect your 3 lives, and rule the global enterprise leaderboard.
         </p>
+
         <div class="hero-actions">
-          <a href="/game.html" class="btn btn-primary">Play Game 🍌</a>
-          <a href="/leaderboard.html" class="btn btn-secondary">View Leaderboard 🏆</a>
+          <a href="/game.html" class="btn btn-arcade">Start Quest 🍌</a>
+          <a href="/leaderboard.html" class="btn btn-secondary">Global Leaderboard 🏆</a>
         </div>
       </section>
 
-      <!-- Architecture and Enterprise Themes Grid -->
+      <!-- THREE THEMED ENTERPRISE FEATURE CARDS -->
       <section class="features-grid">
-        <div class="feature-box">
-          <div class="feature-icon">⚡</div>
-          <h3>Event-Driven Engine</h3>
-          <p>Interactive DOM and keyboard events trigger seamless state transitions, countdown timers, and live visual feedback.</p>
+        <!-- Feature 1: Event-Driven Programming -->
+        <div class="feature-box feat-event">
+          <span class="feature-tag">Theme 2 &bull; Event-Driven</span>
+          <div class="feature-icon-wrapper" style="color: #E040FB;">⚡</div>
+          <h3>Reactive Event Engine</h3>
+          <p>
+            Interactive DOM forms, keyboard event handlers, and precision 100ms timer ticks drive fluid HUD animations, streak multipliers, and immediate visual feedback.
+          </p>
         </div>
 
-        <div class="feature-box">
-          <div class="feature-icon">🌐</div>
-          <h3>Banana API Interop</h3>
-          <p>Architectured with an Express server-side proxy to integrate the external Banana API cleanly while mitigating browser CORS issues.</p>
+        <!-- Feature 2: Interoperability -->
+        <div class="feature-box feat-interop">
+          <span class="feature-tag">Theme 3 &bull; Interoperability</span>
+          <div class="feature-icon-wrapper" style="color: #00E5FF;">🌐</div>
+          <h3>Anti-Cheat API Proxy</h3>
+          <p>
+            Integrates Dr. Marc Conrad’s Banana API over HTTP/REST while bypassing browser CORS constraints and shielding puzzle solutions in server-side sessions.
+          </p>
         </div>
 
-        <div class="feature-box">
-          <div class="feature-icon">🔒</div>
-          <h3>Virtual Identity</h3>
-          <p>Secure authentication with salted bcrypt password hashing, parameterised SQLite queries, and HTTP-only session cookies.</p>
+        <!-- Feature 3: Virtual Identity -->
+        <div class="feature-box feat-auth">
+          <span class="feature-tag">Theme 4 &bull; Virtual Identity</span>
+          <div class="feature-icon-wrapper" style="color: #FFD600;">🛡️</div>
+          <h3>Secure Virtual Identity</h3>
+          <p>
+            Authenticated with salted bcrypt password hashing (10 rounds), parameterised SQLite injection defense, and signed HTTP-only cookies (<code style="color: #FFD600;">banana.sid</code>).
+          </p>
         </div>
       </section>
+
     </div>
   </main>
 
   <footer class="footer">
     <div class="container">
-      <p>University of Bedfordshire &bull; CIS046-3 Software For Enterprise &bull; Assignment 1</p>
+      <p>University of Bedfordshire &bull; CIS046-3 Software For Enterprise &bull; Assignment 1 &bull; Tag v1.0.0</p>
     </div>
   </footer>
 
