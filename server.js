@@ -314,6 +314,62 @@ app.get("/api/leaderboard", requireLogin, (req, res) => {
   }
 });
 
+// AUTH & DATA: Retrieve player profile, aggregated statistics, and recent 5 games
+app.get("/api/profile", requireLogin, (req, res) => {
+  try {
+    const userId = req.session.user.id;
+
+    // Fetch user basic info
+    const user = db.prepare("SELECT username, created_at FROM users WHERE id = ?").get(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User account not found." });
+    }
+
+    // AUTH & DATA: Parameterised aggregate queries for performance statistics
+    const statsStmt = db.prepare(`
+      SELECT 
+        COUNT(*) AS games_played,
+        COALESCE(MAX(score), 0) AS best_score,
+        COALESCE(AVG(score), 0) AS average_score,
+        COALESCE(SUM(correct_answers), 0) AS total_correct
+      FROM scores
+      WHERE user_id = ?
+    `);
+    const stats = statsStmt.get(userId);
+
+    // Fetch last 5 games played by this player
+    const recentStmt = db.prepare(`
+      SELECT id, score, difficulty, correct_answers, created_at
+      FROM scores
+      WHERE user_id = ?
+      ORDER BY created_at DESC, id DESC
+      LIMIT 5
+    `);
+    const recentGames = recentStmt.all(userId);
+
+    return res.json({
+      username: user.username,
+      joinedDate: user.created_at,
+      stats: {
+        gamesPlayed: Number(stats.games_played),
+        bestScore: Number(stats.best_score),
+        averageScore: Math.round(Number(stats.average_score) * 10) / 10,
+        totalCorrect: Number(stats.total_correct)
+      },
+      recentGames: recentGames.map((game) => ({
+        id: game.id,
+        score: game.score,
+        difficulty: game.difficulty,
+        correct_answers: game.correct_answers,
+        date: game.created_at
+      }))
+    });
+  } catch (error) {
+    console.error("Profile fetch error:", error);
+    return res.status(500).json({ error: "Could not retrieve player profile." });
+  }
+});
+
 // Start Express server
 const server = app.listen(PORT, () => {
   console.log(`Banana Quest running at http://localhost:${PORT}`);
