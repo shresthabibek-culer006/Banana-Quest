@@ -1,0 +1,114 @@
+<!-- Generated with Antigravity (AI), reviewed and understood by me. Part of CIS046-3 Assignment 1. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player Profile — Banana Quest</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Dynamic Navigation Bar Mount Point -->
+  <div id="navbarRoot"></div>
+
+  <main class="main-content">
+    <div class="container" style="max-width: 900px;">
+      
+      <!-- Loading State -->
+      <div id="profileLoading" class="puzzle-spinner" style="padding: 4rem 0;">
+        <span class="spinner-icon">🍌</span>
+        <span>Loading player profile...</span>
+      </div>
+
+      <!-- Profile Container (Hidden while loading) -->
+      <div id="profileContent" style="display: none;">
+        
+        <!-- Player Identity Overview Card -->
+        <div class="profile-header-card">
+          <div class="profile-avatar">👤</div>
+          <div class="profile-info">
+            <h2 id="profileUsername">Player</h2>
+            <p class="profile-joined">Member since <span id="profileJoinedDate">-</span></p>
+          </div>
+        </div>
+
+        <!-- 4-Metric Statistics Cards -->
+        <div class="stats-grid-4">
+          <div class="stat-card">
+            <div class="stat-card-icon">🎮</div>
+            <div id="statGamesPlayed" class="stat-card-num">0</div>
+            <div class="stat-card-label">Games Played</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-card-icon">🏆</div>
+            <div id="statBestScore" class="stat-card-num">0</div>
+            <div class="stat-card-label">Best Score</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-card-icon">📊</div>
+            <div id="statAvgScore" class="stat-card-num">0</div>
+            <div class="stat-card-label">Average Score</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-card-icon">🍌</div>
+            <div id="statTotalSolved" class="stat-card-num">0</div>
+            <div class="stat-card-label">Total Solved</div>
+          </div>
+        </div>
+
+        <!-- Recent Games History Card -->
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.8rem;">
+            <h3>Recent Games History</h3>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Last 5 completed games</span>
+          </div>
+
+          <!-- Table Container -->
+          <div id="recentTableWrapper" class="table-wrapper" style="display: none;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 60px;">#</th>
+                  <th>Score</th>
+                  <th>Difficulty</th>
+                  <th>Correct Answers</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="recentGamesBody">
+                <!-- Dynamically populated by js/profile.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty State (No games played yet) -->
+          <div id="recentGamesEmpty" class="empty-state" style="display: none;">
+            <div class="empty-state-icon">🍌</div>
+            <h3>No Games Recorded Yet</h3>
+            <p>You haven't played any Banana Quest games yet. Jump in to test your skills!</p>
+            <a href="/game.html" class="btn btn-primary">Start First Game</a>
+          </div>
+
+          <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="/game.html" class="btn btn-primary">Play Another Round 🍌</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>University of Bedfordshire &bull; CIS046-3 Software For Enterprise &bull; Assignment 1</p>
+    </div>
+  </footer>
+
+  <script src="js/nav.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>
