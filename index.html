@@ -1,24 +1,59 @@
+<!-- Generated with Antigravity (AI), reviewed and understood by me. Part of CIS046-3 Assignment 1. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Banana Quest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banana Quest — Puzzle Challenge</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Banana Quest</h1>
-<div id="game">
-  <img id="puzzleImg" alt="Banana puzzle" style="display:none; max-width:100%;">
-  <div id="controls" style="display:none;">
-    <input type="number" id="answerInput" placeholder="Your answer">
-    <button id="submitBtn">Submit</button>
-  </div>
-  <p id="message"></p>
-  <p>Score: <span id="score">0</span></p>
-</div>
-  <button id="startBtn">Start Game</button>
+  <!-- Dynamic Navigation Bar Mount Point -->
+  <div id="navbarRoot"></div>
 
-  <script src="js/api.js"></script>
-  <script src="js/game.js"></script>
+  <main class="main-content">
+    <div class="container">
+      <section class="hero">
+        <div class="hero-banana">🍌</div>
+        <h1 class="hero-title">Banana Quest</h1>
+        <p class="hero-subtitle">
+          Solve dynamic math puzzles powered by the Banana API, race against the clock, protect your lives, and climb the enterprise leaderboard.
+        </p>
+        <div class="hero-actions">
+          <a href="/game.html" class="btn btn-primary">Play Game 🍌</a>
+          <a href="/leaderboard.html" class="btn btn-secondary">View Leaderboard 🏆</a>
+        </div>
+      </section>
+
+      <!-- Architecture and Enterprise Themes Grid -->
+      <section class="features-grid">
+        <div class="feature-box">
+          <div class="feature-icon">⚡</div>
+          <h3>Event-Driven Engine</h3>
+          <p>Interactive DOM and keyboard events trigger seamless state transitions, countdown timers, and live visual feedback.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon">🌐</div>
+          <h3>Banana API Interop</h3>
+          <p>Architectured with an Express server-side proxy to integrate the external Banana API cleanly while mitigating browser CORS issues.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon">🔒</div>
+          <h3>Virtual Identity</h3>
+          <p>Secure authentication with salted bcrypt password hashing, parameterised SQLite queries, and HTTP-only session cookies.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>University of Bedfordshire &bull; CIS046-3 Software For Enterprise &bull; Assignment 1</p>
+    </div>
+  </footer>
+
+  <script src="js/nav.js"></script>
 </body>
 </html>

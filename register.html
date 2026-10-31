@@ -1,0 +1,90 @@
+<!-- Generated with Antigravity (AI), reviewed and understood by me. Part of CIS046-3 Assignment 1. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — Banana Quest</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Dynamic Navigation Bar Mount Point -->
+  <div id="navbarRoot"></div>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="card auth-card">
+        <div class="brand-icon" style="font-size: 3.5rem; margin-bottom: 0.5rem;">🍌</div>
+        <h2>Join Banana Quest</h2>
+        <p class="auth-subtitle">Create a virtual identity to track your scores and reach the leaderboard.</p>
+
+        <!-- Dynamic Alert Feedback Banner -->
+        <div id="alertBox" class="alert"></div>
+
+        <!-- AUTH: Register form creating account with bcrypt password hashing -->
+        <form id="registerForm" novalidate>
+          <div class="form-group">
+            <label for="username" class="form-label">Username</label>
+            <input 
+              type="text" 
+              id="username" 
+              name="username" 
+              class="form-input" 
+              placeholder="e.g. speedy_monkey" 
+              required 
+              autocomplete="username"
+            >
+            <div class="form-hint">3–20 characters; letters, numbers, and underscores only.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              class="form-input" 
+              placeholder="••••••••" 
+              required 
+              autocomplete="new-password"
+            >
+            <div class="form-hint">Minimum 6 characters. Hashed with bcrypt before storage.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <input 
+              type="password" 
+              id="confirmPassword" 
+              name="confirmPassword" 
+              class="form-input" 
+              placeholder="••••••••" 
+              required 
+              autocomplete="new-password"
+            >
+          </div>
+
+          <!-- EVENT: Submit button triggers auth.js registration handler -->
+          <button type="submit" id="submitBtn" class="btn btn-primary btn-full" style="margin-top: 1rem;">
+            Create Account
+          </button>
+        </form>
+
+        <p style="margin-top: 1.5rem; font-size: 0.92rem; color: var(--text-muted);">
+          Already have an account? 
+          <a href="/login.html" style="font-weight: 600;">Sign in here</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>University of Bedfordshire &bull; CIS046-3 Software For Enterprise &bull; Assignment 1</p>
+    </div>
+  </footer>
+
+  <script src="js/nav.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
