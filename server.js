@@ -38,6 +38,19 @@ app.use(
   })
 );
 
+// Protected HTML Page Routes (AUTH: must be declared BEFORE express.static to enforce auth)
+app.get("/game.html", requirePageLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, "game.html"));
+});
+
+app.get("/leaderboard.html", requirePageLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, "leaderboard.html"));
+});
+
+app.get("/profile.html", requirePageLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, "profile.html"));
+});
+
 // Serve static assets (HTML, CSS, client JS)
 app.use(express.static(__dirname));
 
@@ -139,13 +152,11 @@ app.post("/api/auth/login", async (req, res) => {
 
 // AUTH: Destroy session and clear cookie on logout
 app.post("/api/auth/logout", (req, res) => {
-  // Destroy server-side session record
   req.session.destroy((err) => {
     if (err) {
       console.error("Logout error:", err);
       return res.status(500).json({ error: "Could not log out. Please try again." });
     }
-    // Clear client-side cookie
     res.clearCookie("banana.sid");
     return res.json({ message: "Logged out successfully." });
   });
@@ -166,18 +177,74 @@ app.get("/api/me", (req, res) => {
 });
 
 // ==========================================
-// INTEROPERABILITY: BANANA API PROXY
+// INTEROPERABILITY & CORE GAME LOGIC
 // ==========================================
 
-// INTEROP: Proxies external Banana API requests to prevent browser CORS restrictions
+// INTEROP & AUTH: Fetch puzzle from Banana API, store solution in session, send ONLY question URL to browser
 app.get("/api/puzzle", requireLogin, async (req, res) => {
   try {
+    const difficulty = ["easy", "medium", "hard"].includes(req.query.difficulty)
+      ? req.query.difficulty
+      : "medium";
+
+    // INTEROP: Express server acts as proxy to Banana API, bypassing browser CORS restrictions
     const response = await fetch("http://marcconrad.com/uob/banana/api.php");
+    if (!response.ok) {
+      throw new Error(`Banana API responded with status ${response.status}`);
+    }
     const data = await response.json();
-    res.json(data);
+
+    // AUTH / SECURITY: The solution and issued timestamp are stored exclusively in the server-side session.
+    // The browser client NEVER receives data.solution, ensuring the answer cannot be inspected in DevTools.
+    req.session.currentPuzzle = {
+      solution: Number(data.solution),
+      issuedAt: Date.now(),
+      difficulty: difficulty
+    };
+
+    return res.json({
+      question: data.question,
+      difficulty: difficulty
+    });
   } catch (error) {
-    console.error("Banana API error:", error);
-    res.status(502).json({ error: "Could not reach the Banana API." });
+    console.error("Banana API proxy error:", error);
+    return res.status(502).json({ error: "Could not reach the Banana API." });
+  }
+});
+
+// AUTH & EVENT: Verify user's submitted answer against session-stored solution and check elapsed time
+app.post("/api/answer", requireLogin, (req, res) => {
+  try {
+    const activePuzzle = req.session.currentPuzzle;
+    if (!activePuzzle) {
+      return res.status(400).json({ error: "No active puzzle found. Please request a new puzzle." });
+    }
+
+    const { answer } = req.body;
+    const userAnswer = Number(answer);
+    const solution = activePuzzle.solution;
+    const difficulty = activePuzzle.difficulty || "medium";
+
+    // Check elapsed time using timestamp recorded when puzzle was issued
+    const timeLimits = { easy: 45, medium: 30, hard: 15 };
+    const allowedSeconds = (timeLimits[difficulty] || 30) + 2; // +2s grace margin for network roundtrip
+    const elapsedSeconds = (Date.now() - activePuzzle.issuedAt) / 1000;
+    const isTimeout = elapsedSeconds > allowedSeconds;
+
+    // Invalidate the session puzzle immediately so the solution cannot be re-used
+    req.session.currentPuzzle = null;
+
+    const isCorrect = !isTimeout && userAnswer === solution;
+
+    return res.json({
+      correct: isCorrect,
+      timeout: isTimeout,
+      solution: solution,
+      elapsedSeconds: Math.round(elapsedSeconds * 10) / 10
+    });
+  } catch (error) {
+    console.error("Answer verification error:", error);
+    return res.status(500).json({ error: "Internal error checking answer." });
   }
 });
 

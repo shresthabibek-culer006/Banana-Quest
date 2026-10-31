@@ -1,48 +1,347 @@
-// Game logic and event handlers (event-driven programming)
-let currentSolution = null;
-let score = 0;
+// Generated with Antigravity (AI), reviewed and understood by me. Part of CIS046-3 Assignment 1.
 
-const startBtn = document.getElementById("startBtn");
-const submitBtn = document.getElementById("submitBtn");
-const answerInput = document.getElementById("answerInput");
-const puzzleImg = document.getElementById("puzzleImg");
-const controls = document.getElementById("controls");
-const message = document.getElementById("message");
-const scoreEl = document.getElementById("score");
+/**
+ * Banana Quest — Core Game Engine
+ * Themes: Event-Driven Programming, Virtual Identity, Interoperability
+ */
 
+// Game Configuration and State
+const CONFIG = {
+  timeLimits: { easy: 45, medium: 30, hard: 15 },
+  basePoints: { easy: 10, medium: 20, hard: 30 },
+  streakBonus: 5
+};
+
+let gameState = {
+  score: 0,
+  streak: 0,
+  lives: 3,
+  correctAnswers: 0,
+  difficulty: "medium",
+  remainingTime: 30,
+  totalTime: 30,
+  timerInterval: null,
+  isSubmitting: false,
+  isPlaying: false
+};
+
+// DOM Element References
+let setupScreen, gameScreen, gameOverScreen;
+let startGameBtn, answerForm, answerInput, submitAnswerBtn, endGameBtn, playAgainBtn;
+let scoreVal, streakVal, timerVal, timerBar, livesContainer;
+let puzzleSpinner, puzzleImg, statusMsg;
+let finalScoreVal, finalSolvedVal, finalDiffVal, gameOverReason;
+
+// EVENT: Initialize DOM references and event listeners once document is ready
+document.addEventListener("DOMContentLoaded", () => {
+  setupScreen = document.getElementById("setupScreen");
+  gameScreen = document.getElementById("gameScreen");
+  gameOverScreen = document.getElementById("gameOverScreen");
+
+  startGameBtn = document.getElementById("startGameBtn");
+  answerForm = document.getElementById("answerForm");
+  answerInput = document.getElementById("answerInput");
+  submitAnswerBtn = document.getElementById("submitAnswerBtn");
+  endGameBtn = document.getElementById("endGameBtn");
+  playAgainBtn = document.getElementById("playAgainBtn");
+
+  scoreVal = document.getElementById("scoreVal");
+  streakVal = document.getElementById("streakVal");
+  timerVal = document.getElementById("timerVal");
+  timerBar = document.getElementById("timerBar");
+  livesContainer = document.getElementById("livesContainer");
+
+  puzzleSpinner = document.getElementById("puzzleSpinner");
+  puzzleImg = document.getElementById("puzzleImg");
+  statusMsg = document.getElementById("statusMsg");
+
+  finalScoreVal = document.getElementById("finalScoreVal");
+  finalSolvedVal = document.getElementById("finalSolvedVal");
+  finalDiffVal = document.getElementById("finalDiffVal");
+  gameOverReason = document.getElementById("gameOverReason");
+
+  // EVENT: Select difficulty level by clicking difficulty cards
+  const diffCards = document.querySelectorAll(".diff-card");
+  diffCards.forEach((card) => {
+    card.addEventListener("click", () => {
+      diffCards.forEach((c) => c.classList.remove("selected"));
+      card.classList.add("selected");
+      gameState.difficulty = card.getAttribute("data-diff");
+    });
+  });
+
+  // EVENT: Start game button click initiates active game round
+  if (startGameBtn) {
+    startGameBtn.addEventListener("click", startNewGame);
+  }
+
+  // EVENT: Handle form submission for answering puzzle
+  if (answerForm) {
+    answerForm.addEventListener("submit", handleAnswerSubmit);
+  }
+
+  // EVENT: Surrender / End game button click
+  if (endGameBtn) {
+    endGameBtn.addEventListener("click", () => {
+      endGame("You decided to cash in and end the round.");
+    });
+  }
+
+  // EVENT: Play again button restarts game setup
+  if (playAgainBtn) {
+    playAgainBtn.addEventListener("click", () => {
+      gameOverScreen.style.display = "none";
+      setupScreen.style.display = "block";
+    });
+  }
+});
+
+/**
+ * Initializes a new game session
+ */
+function startNewGame() {
+  gameState.score = 0;
+  gameState.streak = 0;
+  gameState.lives = 3;
+  gameState.correctAnswers = 0;
+  gameState.isSubmitting = false;
+  gameState.isPlaying = true;
+  gameState.totalTime = CONFIG.timeLimits[gameState.difficulty] || 30;
+
+  updateHUD();
+
+  setupScreen.style.display = "none";
+  gameOverScreen.style.display = "none";
+  gameScreen.style.display = "block";
+
+  loadPuzzle();
+}
+
+/**
+ * Updates the game HUD (Score, Streak, Lives)
+ */
+function updateHUD() {
+  scoreVal.textContent = gameState.score;
+  streakVal.textContent = `${gameState.streak}x`;
+
+  // Render lives bananas
+  const lifeItems = livesContainer.querySelectorAll(".life-item");
+  lifeItems.forEach((item, index) => {
+    if (index < gameState.lives) {
+      item.classList.remove("lost");
+    } else {
+      item.classList.add("lost");
+    }
+  });
+}
+
+/**
+ * INTEROP: Fetches a puzzle from Express server proxy (Banana API)
+ */
 async function loadPuzzle() {
-  message.textContent = "Loading...";
+  clearInterval(gameState.timerInterval);
+  gameState.isSubmitting = false;
+
+  // Show loading spinner while proxy fetches external Banana API image
+  puzzleImg.style.display = "none";
+  puzzleSpinner.style.display = "flex";
+  answerInput.value = "";
+  answerInput.disabled = true;
+  submitAnswerBtn.disabled = true;
+
+  statusMsg.className = "game-status-msg info";
+  statusMsg.textContent = "Loading puzzle from Banana API...";
+
   try {
-    const puzzle = await fetchPuzzle();
-    console.log(puzzle);
-    puzzleImg.src = puzzle.question;       // image link from the API
-    currentSolution = Number(puzzle.solution);
-    puzzleImg.style.display = "block";
-    controls.style.display = "block";
-    answerInput.value = "";
-    message.textContent = "What number replaces the missing digit?";
+    const data = await fetchPuzzle(gameState.difficulty);
+
+    // INTEROP: Display puzzle image from Banana API response
+    puzzleImg.src = data.question;
+    puzzleImg.onload = () => {
+      puzzleSpinner.style.display = "none";
+      puzzleImg.style.display = "block";
+      answerInput.disabled = false;
+      submitAnswerBtn.disabled = false;
+      answerInput.focus();
+
+      statusMsg.className = "game-status-msg info";
+      statusMsg.textContent = "What number replaces the missing digit?";
+
+      startTimer();
+    };
   } catch (error) {
-    console.error(error);
-    message.textContent = "Error: " + error.message;
+    console.error("Failed to load puzzle:", error);
+    statusMsg.className = "game-status-msg error";
+    statusMsg.textContent = "Could not contact Banana API. Retrying in 2s...";
+    setTimeout(loadPuzzle, 2000);
   }
 }
 
-// Event: player clicks Start / Next
-startBtn.addEventListener("click", loadPuzzle);
+/**
+ * Starts the countdown timer
+ */
+function startTimer() {
+  clearInterval(gameState.timerInterval);
+  gameState.remainingTime = gameState.totalTime;
+  updateTimerUI();
 
-// Event: player submits an answer
-submitBtn.addEventListener("click", () => {
-  if (Number(answerInput.value) === currentSolution) {
-    score++;
-    scoreEl.textContent = score;
-    message.textContent = "Correct! 🍌";
+  // EVENT: Timer tick event fired every 100 milliseconds
+  const intervalMs = 100;
+  gameState.timerInterval = setInterval(() => {
+    if (!gameState.isPlaying) {
+      clearInterval(gameState.timerInterval);
+      return;
+    }
+
+    gameState.remainingTime -= intervalMs / 1000;
+
+    if (gameState.remainingTime <= 0) {
+      clearInterval(gameState.timerInterval);
+      gameState.remainingTime = 0;
+      updateTimerUI();
+      handleTimeout();
+    } else {
+      updateTimerUI();
+    }
+  }, intervalMs);
+}
+
+/**
+ * Updates the visual timer bar and text
+ */
+function updateTimerUI() {
+  const percentage = Math.max(0, (gameState.remainingTime / gameState.totalTime) * 100);
+  timerBar.style.width = `${percentage}%`;
+  timerVal.textContent = `${Math.ceil(gameState.remainingTime)}s`;
+
+  if (percentage <= 25) {
+    timerBar.className = "timer-bar danger";
+  } else if (percentage <= 50) {
+    timerBar.className = "timer-bar warning";
+  } else {
+    timerBar.className = "timer-bar";
+  }
+}
+
+/**
+ * EVENT: Handles user answer submission
+ */
+async function handleAnswerSubmit(e) {
+  if (e) e.preventDefault();
+
+  if (gameState.isSubmitting || !gameState.isPlaying) return;
+
+  const rawAnswer = answerInput.value.trim();
+  if (rawAnswer === "") {
+    statusMsg.className = "game-status-msg error";
+    statusMsg.textContent = "Please enter a numeric answer.";
+    return;
+  }
+
+  clearInterval(gameState.timerInterval);
+  gameState.isSubmitting = true;
+  answerInput.disabled = true;
+  submitAnswerBtn.disabled = true;
+
+  try {
+    // AUTH / INTEROP: Submit answer to server-side validator
+    const result = await submitAnswer(rawAnswer);
+    processAnswerResult(result);
+  } catch (error) {
+    console.error("Verification error:", error);
+    statusMsg.className = "game-status-msg error";
+    statusMsg.textContent = "Error checking answer. Please retry.";
+    gameState.isSubmitting = false;
+    answerInput.disabled = false;
+    submitAnswerBtn.disabled = false;
+  }
+}
+
+/**
+ * Handles expiration of the round timer
+ */
+async function handleTimeout() {
+  if (gameState.isSubmitting || !gameState.isPlaying) return;
+  gameState.isSubmitting = true;
+  answerInput.disabled = true;
+  submitAnswerBtn.disabled = true;
+
+  try {
+    // Submit -999 as sentinel value for expired timer
+    const result = await submitAnswer(-999);
+    processAnswerResult(result);
+  } catch (err) {
+    console.error("Timeout reporting error:", err);
+    processAnswerResult({ correct: false, timeout: true, solution: "?" });
+  }
+}
+
+/**
+ * Evaluates the response from server answer validator
+ */
+function processAnswerResult(result) {
+  if (result.correct) {
+    // Correct Answer Logic
+    gameState.streak++;
+    gameState.correctAnswers++;
+
+    const base = CONFIG.basePoints[gameState.difficulty] || 20;
+    const bonus = (gameState.streak - 1) * CONFIG.streakBonus;
+    const gainedPoints = base + bonus;
+    gameState.score += gainedPoints;
+
+    updateHUD();
+
+    statusMsg.className = "game-status-msg success pop-anim";
+    statusMsg.textContent = `Correct! 🍌 +${gainedPoints} pts${gameState.streak > 1 ? ` (${gameState.streak}x Streak!)` : ''}`;
+
     setTimeout(loadPuzzle, 1000);
   } else {
-    message.textContent = "Wrong, try again.";
-  }
-});
+    // Incorrect Answer or Timeout Logic
+    gameState.streak = 0;
+    gameState.lives--;
 
-// Event: pressing Enter also submits
-answerInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") submitBtn.click();
-});
+    updateHUD();
+
+    // Trigger visual shake feedback
+    gameScreen.classList.add("shake-anim");
+    setTimeout(() => gameScreen.classList.remove("shake-anim"), 450);
+
+    statusMsg.className = "game-status-msg error";
+    if (result.timeout) {
+      statusMsg.textContent = `Time's up! ⏰ Solution was ${result.solution}. -1 Life`;
+    } else {
+      statusMsg.textContent = `Wrong! ❌ Solution was ${result.solution}. -1 Life`;
+    }
+
+    if (gameState.lives <= 0) {
+      setTimeout(() => {
+        endGame("All 3 lives were lost!");
+      }, 1200);
+    } else {
+      setTimeout(loadPuzzle, 1500);
+    }
+  }
+}
+
+/**
+ * Concludes game session, displays final scores, and prepares score persistence
+ */
+async function endGame(reason = "Game Over") {
+  gameState.isPlaying = false;
+  clearInterval(gameState.timerInterval);
+
+  finalScoreVal.textContent = gameState.score;
+  finalSolvedVal.textContent = gameState.correctAnswers;
+  finalDiffVal.textContent = gameState.difficulty;
+  gameOverReason.textContent = reason;
+
+  gameScreen.style.display = "none";
+  gameOverScreen.style.display = "block";
+  gameOverScreen.classList.add("pop-anim");
+
+  // Hook for Task 5: Score persistence via POST /api/scores
+  if (typeof saveScoreToServer === "function") {
+    saveScoreToServer(gameState.score, gameState.difficulty, gameState.correctAnswers);
+  }
+}
