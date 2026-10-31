@@ -62,13 +62,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // EVENT: Select difficulty level by clicking difficulty cards
   const diffCards = document.querySelectorAll(".diff-card");
+
+  function updateDifficultyUI(diff) {
+    diffCards.forEach((card) => {
+      const cardDiff = card.getAttribute("data-diff");
+      const btn = card.querySelector(".diff-select-btn");
+      if (cardDiff === diff) {
+        card.classList.add("selected");
+        if (btn) {
+          btn.classList.add("active");
+          btn.textContent = "✓ Selected";
+        }
+      } else {
+        card.classList.remove("selected");
+        if (btn) {
+          btn.classList.remove("active");
+          const title = card.querySelector(".diff-title");
+          btn.textContent = `Select ${title ? title.textContent.trim() : cardDiff}`;
+        }
+      }
+    });
+
+    if (startGameBtn) {
+      if (diff === "easy") {
+        startGameBtn.innerHTML = "START APPRENTICE QUEST 🌴";
+        startGameBtn.style.background = "linear-gradient(135deg, #00E676, #00B0FF)";
+      } else if (diff === "hard") {
+        startGameBtn.innerHTML = "ENTER SILVERBACK INFERNO 🔥";
+        startGameBtn.style.background = "linear-gradient(135deg, #FF1744, #FF9100)";
+      } else {
+        startGameBtn.innerHTML = "START QUEST 🍌";
+        startGameBtn.style.background = "linear-gradient(135deg, #FFD600, #FF9100)";
+      }
+    }
+  }
+
   diffCards.forEach((card) => {
     card.addEventListener("click", () => {
-      diffCards.forEach((c) => c.classList.remove("selected"));
-      card.classList.add("selected");
-      gameState.difficulty = card.getAttribute("data-diff");
+      const diff = card.getAttribute("data-diff") || "medium";
+      gameState.difficulty = diff;
+      updateDifficultyUI(diff);
     });
   });
+
+  // Initialize medium selection on page load
+  updateDifficultyUI("medium");
 
   // EVENT: Start game button click initiates active game round
   if (startGameBtn) {

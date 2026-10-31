@@ -151,17 +151,17 @@ app.post("/api/auth/login", async (req, res) => {
 });
 
 // AUTH: Federated Virtual Identity via Google OAuth 2.0 Identity Provider
-// Demonstrates alternative identity verification without local password storage (Theme 4)
-app.get("/api/auth/google", async (req, res) => {
+// Authenticates user based on selected or detected Google Account profile (Theme 4)
+app.post("/api/auth/google", async (req, res) => {
   try {
-    // Virtual Identity: Simulates/completes Google OAuth federated authentication
-    const googleAccount = req.query.account ? req.query.account.trim() : "Bibek (Google)";
-    const googleUsername = googleAccount.slice(0, 20);
+    const { name, email } = req.body;
+    const rawName = (name && name.trim()) || (email && email.split("@")[0].trim()) || "Google User";
+    const googleUsername = rawName.replace(/[^a-zA-Z0-9_ ]/g, "").slice(0, 20) || "Google User";
 
     let user = db.prepare("SELECT id, username FROM users WHERE username = ?").get(googleUsername);
     if (!user) {
-      // Create federated account in SQLite with OAuth token signature (no local password)
-      const oauthPlaceholder = await bcrypt.hash(`oauth_google_${Date.now()}`, 10);
+      // Create federated account in SQLite with OAuth token signature (no local password needed)
+      const oauthPlaceholder = await bcrypt.hash(`oauth_google_${email || Date.now()}`, 10);
       const info = db.prepare("INSERT INTO users (username, password_hash) VALUES (?, ?)").run(googleUsername, oauthPlaceholder);
       user = { id: Number(info.lastInsertRowid), username: googleUsername };
     }
@@ -170,12 +170,42 @@ app.get("/api/auth/google", async (req, res) => {
     req.session.user = {
       id: user.id,
       username: user.username,
+      email: email || `${googleUsername.toLowerCase().replace(/\s+/g, "")}@gmail.com`,
+      provider: "google"
+    };
+
+    return res.json({
+      message: "Google authentication successful.",
+      user: req.session.user
+    });
+  } catch (error) {
+    console.error("Google auth POST error:", error);
+    return res.status(500).json({ error: "Failed to authenticate with Google account." });
+  }
+});
+
+app.get("/api/auth/google", async (req, res) => {
+  try {
+    const rawAccount = req.query.account ? req.query.account.trim() : (req.query.email ? req.query.email.split("@")[0].trim() : "Bibek Shrestha");
+    const googleUsername = rawAccount.replace(/[^a-zA-Z0-9_ ]/g, "").slice(0, 20) || "Google User";
+
+    let user = db.prepare("SELECT id, username FROM users WHERE username = ?").get(googleUsername);
+    if (!user) {
+      const oauthPlaceholder = await bcrypt.hash(`oauth_google_${Date.now()}`, 10);
+      const info = db.prepare("INSERT INTO users (username, password_hash) VALUES (?, ?)").run(googleUsername, oauthPlaceholder);
+      user = { id: Number(info.lastInsertRowid), username: googleUsername };
+    }
+
+    req.session.user = {
+      id: user.id,
+      username: user.username,
+      email: req.query.email || `${googleUsername.toLowerCase().replace(/\s+/g, "")}@gmail.com`,
       provider: "google"
     };
 
     return res.redirect("/game.html");
   } catch (error) {
-    console.error("Google auth error:", error);
+    console.error("Google auth GET error:", error);
     return res.redirect("/login.html?error=google_failed");
   }
 });

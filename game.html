@@ -63,43 +63,88 @@
           Choose your challenge level. Higher difficulty grants more points per correct answer!
         </p>
 
-        <!-- 3 DISTINCT VIBRANT DIFFICULTY CARDS -->
+        <!-- 3 DISTINCT EYE-CATCHY ARCADE MISSION TIER CARDS -->
         <div class="difficulty-grid">
-          <!-- Easy Tier (Emerald) -->
+          <!-- Easy Tier (Emerald Jungle) -->
           <div class="diff-card" data-diff="easy">
-            <span class="diff-badge-icon">🌴</span>
-            <div class="diff-title">Easy</div>
+            <span class="diff-tier-tag" style="background: rgba(0, 230, 118, 0.15); color: #00E676; border: 1px solid rgba(0, 230, 118, 0.3);">
+              🌴 Apprentice Tier
+            </span>
+            <div class="diff-mascot-wrapper">
+              <span class="diff-badge-icon">🐵</span>
+            </div>
+            <div class="diff-title" style="color: #00E676;">Easy</div>
             <div class="diff-role">Apprentice Monkey</div>
             <div class="diff-specs">
-              ⏱ <strong>45s</strong> / puzzle<br>
-              ⭐ <strong>10 pts</strong> + streak<br>
-              <span style="color: #00E676; font-weight: 600;">Relaxed Pace</span>
+              <div class="diff-spec-row">
+                <span>⏱ Speed Limit</span>
+                <strong>45s / puzzle</strong>
+              </div>
+              <div class="diff-spec-row">
+                <span>⭐ Base Reward</span>
+                <strong style="color: #00E676;">10 pts + streak</strong>
+              </div>
+              <div class="diff-spec-row">
+                <span>🎯 Pace</span>
+                <strong style="color: #A5D6A7;">Relaxed</strong>
+              </div>
             </div>
+            <div class="diff-select-btn">Select Easy</div>
           </div>
 
-          <!-- Medium Tier (Banana Gold - Popular) -->
+          <!-- Medium Tier (Cyber Banana Gold - Most Popular) -->
           <div class="diff-card selected" data-diff="medium">
-            <div class="popular-ribbon">POPULAR</div>
-            <span class="diff-badge-icon">⚡</span>
-            <div class="diff-title">Medium</div>
+            <div class="popular-ribbon">★ POPULAR ★</div>
+            <span class="diff-tier-tag" style="background: rgba(255, 214, 0, 0.15); color: #FFD600; border: 1px solid rgba(255, 214, 0, 0.35);">
+              ⚡ Standard Arcade
+            </span>
+            <div class="diff-mascot-wrapper">
+              <span class="diff-badge-icon">🍌</span>
+            </div>
+            <div class="diff-title" style="color: #FFD600;">Medium</div>
             <div class="diff-role">Banana Ranger</div>
             <div class="diff-specs">
-              ⏱ <strong>30s</strong> / puzzle<br>
-              ⭐ <strong>20 pts</strong> + streak<br>
-              <span style="color: #FFD600; font-weight: 600;">Standard Speed</span>
+              <div class="diff-spec-row">
+                <span>⏱ Speed Limit</span>
+                <strong>30s / puzzle</strong>
+              </div>
+              <div class="diff-spec-row">
+                <span>⭐ Base Reward</span>
+                <strong style="color: #FFD600;">20 pts + streak</strong>
+              </div>
+              <div class="diff-spec-row">
+                <span>🎯 Pace</span>
+                <strong style="color: #FFE082;">Competitive</strong>
+              </div>
             </div>
+            <div class="diff-select-btn active">✓ Selected</div>
           </div>
 
-          <!-- Hard Tier (Fiery Crimson) -->
+          <!-- Hard Tier (Fiery Crimson Inferno) -->
           <div class="diff-card" data-diff="hard">
-            <span class="diff-badge-icon">🔥</span>
-            <div class="diff-title">Hardcore</div>
+            <span class="diff-tier-tag" style="background: rgba(255, 23, 68, 0.15); color: #FF5252; border: 1px solid rgba(255, 23, 68, 0.35);">
+              🔥 Survival Rush
+            </span>
+            <div class="diff-mascot-wrapper">
+              <span class="diff-badge-icon">🦍</span>
+            </div>
+            <div class="diff-title" style="color: #FF1744;">Hardcore</div>
             <div class="diff-role">Silverback Master</div>
             <div class="diff-specs">
-              ⏱ <strong>15s</strong> / puzzle<br>
-              ⭐ <strong>30 pts</strong> + streak<br>
-              <span style="color: #FF1744; font-weight: 600;">Extreme Rush</span>
+              <div class="diff-spec-row">
+                <span>⏱ Speed Limit</span>
+                <strong>15s / puzzle</strong>
+              </div>
+              <div class="diff-spec-row">
+                <span>⭐ Base Reward</span>
+                <strong style="color: #FF5252;">30 pts + streak</strong>
+              </div>
+              <div class="diff-spec-row">
+                <span>🎯 Pace</span>
+                <strong style="color: #FF8A80;">Extreme Rush</strong>
+              </div>
             </div>
+            <div class="diff-select-btn">Select Hardcore</div>
           </div>
         </div>
 

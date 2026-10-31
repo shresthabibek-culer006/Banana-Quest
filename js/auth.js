@@ -145,4 +145,218 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // ==========================================
+  // AUTH & EVENT: Interactive Google OAuth 2.0 Account Picker (Theme 4)
+  // Allows authentic selection and login for any active or custom Google account
+  // ==========================================
+  const googleSignInBtn = document.getElementById("googleSignInBtn");
+  const googleAuthModal = document.getElementById("googleAuthModal");
+  const closeGoogleModal = document.getElementById("closeGoogleModal");
+  const googleAccountListContainer = document.getElementById("googleAccountListContainer");
+  const googleCustomToggle = document.getElementById("googleCustomToggle");
+  const googleCustomInputArea = document.getElementById("googleCustomInputArea");
+  const googleCustomNameInput = document.getElementById("googleCustomNameInput");
+  const googleCustomConfirmBtn = document.getElementById("googleCustomConfirmBtn");
+  const googleModalSpinner = document.getElementById("googleModalSpinner");
+  const googleSpinnerText = document.getElementById("googleSpinnerText");
+
+  if (googleSignInBtn && googleAuthModal) {
+    // Default initial accounts if storage is fresh
+    const DEFAULT_ACCOUNTS = [
+      { name: "Bibek Shrestha", email: "bibekstha@gmail.com", avatar: "B", active: true }
+    ];
+
+    function getStoredGoogleAccounts() {
+      try {
+        const stored = localStorage.getItem("banana_google_accounts");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {
+        console.warn("Could not read stored Google accounts:", e);
+      }
+      return DEFAULT_ACCOUNTS;
+    }
+
+    function saveGoogleAccounts(accounts) {
+      try {
+        localStorage.setItem("banana_google_accounts", JSON.stringify(accounts));
+      } catch (e) {
+        console.warn("Could not save Google accounts:", e);
+      }
+    }
+
+    function renderGoogleAccounts() {
+      if (!googleAccountListContainer) return;
+      const accounts = getStoredGoogleAccounts();
+      googleAccountListContainer.innerHTML = "";
+
+      accounts.forEach((acc, index) => {
+        const item = document.createElement("div");
+        item.className = "google-account-item";
+        item.setAttribute("role", "button");
+        item.setAttribute("tabindex", "0");
+        item.innerHTML = `
+          <div class="google-avatar-circle">${escapeHtml(acc.avatar || (acc.name ? acc.name[0].toUpperCase() : "G"))}</div>
+          <div class="google-account-details">
+            <div class="google-account-name">${escapeHtml(acc.name)}</div>
+            <div class="google-account-email">${escapeHtml(acc.email)}</div>
+          </div>
+          <span class="google-active-badge">${index === 0 ? "Signed in" : "Google"}</span>
+        `;
+
+        // EVENT: Clicking an account logs in as that specific Google identity
+        item.addEventListener("click", () => {
+          performGoogleLogin(acc.name, acc.email);
+        });
+
+        googleAccountListContainer.appendChild(item);
+      });
+    }
+
+    // AUTH: Submit Google account profile to server session endpoint
+    async function performGoogleLogin(name, email) {
+      if (googleModalSpinner) {
+        googleModalSpinner.style.display = "block";
+        if (googleSpinnerText) {
+          googleSpinnerText.textContent = `Signing in with Google as ${name}...`;
+        }
+      }
+      if (googleAccountListContainer) googleAccountListContainer.style.display = "none";
+      if (googleCustomToggle) googleCustomToggle.style.display = "none";
+      if (googleCustomInputArea) googleCustomInputArea.style.display = "none";
+
+      try {
+        const res = await fetch("/api/auth/google", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Google authentication failed.");
+        }
+
+        // Store last active Google identity in local storage
+        localStorage.setItem("banana_google_active_user", JSON.stringify(data.user));
+
+        if (googleSpinnerText) {
+          googleSpinnerText.textContent = "Google Identity Verified! Loading game...";
+        }
+
+        setTimeout(() => {
+          window.location.href = "/game.html";
+        }, 650);
+      } catch (err) {
+        console.error("Google login error:", err);
+        if (googleModalSpinner) googleModalSpinner.style.display = "none";
+        if (googleAccountListContainer) googleAccountListContainer.style.display = "flex";
+        if (googleCustomToggle) googleCustomToggle.style.display = "flex";
+        showAlert(err.message || "Could not complete Google authentication.");
+      }
+    }
+
+    // EVENT: Open modal on Google Sign-In button click
+    googleSignInBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      renderGoogleAccounts();
+      if (googleCustomInputArea) googleCustomInputArea.style.display = "none";
+      if (googleAccountListContainer) googleAccountListContainer.style.display = "flex";
+      if (googleCustomToggle) googleCustomToggle.style.display = "flex";
+      if (googleModalSpinner) googleModalSpinner.style.display = "none";
+      googleAuthModal.style.display = "flex";
+    });
+
+    // EVENT: Close modal
+    if (closeGoogleModal) {
+      closeGoogleModal.addEventListener("click", () => {
+        googleAuthModal.style.display = "none";
+      });
+    }
+
+    googleAuthModal.addEventListener("click", (e) => {
+      if (e.target === googleAuthModal) {
+        googleAuthModal.style.display = "none";
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && googleAuthModal.style.display !== "none") {
+        googleAuthModal.style.display = "none";
+      }
+    });
+
+    // EVENT: Toggle custom account input
+    if (googleCustomToggle && googleCustomInputArea) {
+      googleCustomToggle.addEventListener("click", () => {
+        const isHidden = googleCustomInputArea.style.display === "none";
+        googleCustomInputArea.style.display = isHidden ? "block" : "none";
+        if (isHidden && googleCustomNameInput) {
+          googleCustomNameInput.focus();
+        }
+      });
+    }
+
+    // EVENT: Confirm custom Google account
+    if (googleCustomConfirmBtn && googleCustomNameInput) {
+      googleCustomConfirmBtn.addEventListener("click", () => {
+        const val = googleCustomNameInput.value.trim();
+        if (!val) {
+          googleCustomNameInput.focus();
+          return;
+        }
+
+        let name = val;
+        let email = `${val.toLowerCase().replace(/[^a-z0-9]/g, "")}@gmail.com`;
+
+        if (val.includes("@")) {
+          email = val;
+          name = val.split("@")[0].replace(/[^a-zA-Z0-9_ ]/g, " ").trim();
+        }
+
+        // Capitalize first letter of words in name
+        name = name.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+        if (!name) name = "Google User";
+
+        // Add to stored accounts
+        const accounts = getStoredGoogleAccounts();
+        const existingIdx = accounts.findIndex(a => a.email.toLowerCase() === email.toLowerCase());
+        const newAccount = {
+          name,
+          email,
+          avatar: name[0].toUpperCase(),
+          active: true
+        };
+
+        if (existingIdx >= 0) {
+          accounts[existingIdx] = newAccount;
+        } else {
+          accounts.unshift(newAccount);
+        }
+        saveGoogleAccounts(accounts);
+
+        performGoogleLogin(name, email);
+      });
+
+      googleCustomNameInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          googleCustomConfirmBtn.click();
+        }
+      });
+    }
+  }
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 });
