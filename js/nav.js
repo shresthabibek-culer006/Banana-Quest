@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           </a>
           <ul class="nav-links">
             ${isLoggedIn ? `
-              <li><span class="user-badge">👤 ${escapeHtml(user.username)}</span></li>
+              <li><span class="user-badge">${user.provider === 'google' ? '🌐 ' : '👤 '}${escapeHtml(user.username)}</span></li>
               <li><a href="/game.html" class="nav-link ${currentPath.includes('game') ? 'active' : ''}">Play</a></li>
               <li><a href="/leaderboard.html" class="nav-link ${currentPath.includes('leaderboard') ? 'active' : ''}">Leaderboard</a></li>
               <li><a href="/profile.html" class="nav-link ${currentPath.includes('profile') ? 'active' : ''}">Profile</a></li>
