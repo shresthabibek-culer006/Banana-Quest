@@ -710,3 +710,110 @@ a:hover {
   border-radius: var(--radius-md);
   margin: 1.5rem 0;
 }
+
+
+/* ==========================================
+   LEADERBOARD & TABLE STYLING
+   ========================================== */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.table th {
+  background-color: var(--bg-input);
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.table td {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-cream);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background-color: rgba(255, 217, 61, 0.04);
+}
+
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-family: var(--font-display);
+}
+
+.rank-1 {
+  background: rgba(255, 217, 61, 0.2);
+  color: var(--banana-yellow);
+  border: 1px solid var(--banana-yellow);
+}
+
+.rank-2 {
+  background: rgba(192, 192, 192, 0.2);
+  color: #E0E0E0;
+  border: 1px solid #C0C0C0;
+}
+
+.rank-3 {
+  background: rgba(205, 127, 50, 0.2);
+  color: #E5A158;
+  border: 1px solid #CD7F32;
+}
+
+.badge-diff {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  text-transform: capitalize;
+}
+
+.badge-diff.easy { background: rgba(78, 186, 111, 0.2); color: var(--success-green); }
+.badge-diff.medium { background: rgba(255, 217, 61, 0.2); color: var(--banana-yellow); }
+.badge-diff.hard { background: rgba(255, 90, 95, 0.2); color: var(--error-red); }
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+
+.empty-state-icon {
+  font-size: 3.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.empty-state h3 {
+  margin-bottom: 0.4rem;
+}
+
+.empty-state p {
+  color: var(--text-muted);
+  max-width: 400px;
+  margin: 0 auto 1.5rem;
+}
